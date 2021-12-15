@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:forumapp/models/UsuarioBD.dart';
 import 'package:forumapp/views/page_forum.dart';
+import 'logar.dart';
 
 class Cadastro extends StatefulWidget {
   final Usuario contact;
@@ -13,6 +14,7 @@ class Cadastro extends StatefulWidget {
 
 class _CadastroState extends State<Cadastro> {
   TextEditingController nome = TextEditingController();
+  
   TextEditingController email = TextEditingController();
   TextEditingController senha = TextEditingController();
   UsuarioHelper helper = UsuarioHelper();
@@ -50,13 +52,15 @@ class _CadastroState extends State<Cadastro> {
         backgroundColor: Colors.blue[800],
       ),
       body:  SingleChildScrollView(
+        
         padding: const EdgeInsets.all(10.0),
 
-             child: Form(
+      child: Form(
       key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+         
            TextFormField(
             controller: nome,
             decoration: const InputDecoration(
@@ -98,6 +102,7 @@ class _CadastroState extends State<Cadastro> {
               return null;
             },
           ),
+        
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: ElevatedButton(
@@ -110,8 +115,8 @@ class _CadastroState extends State<Cadastro> {
                   helper.saveContact(a);                 
                    Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => PageForum(
-                      a:a)),
+                    MaterialPageRoute(builder: (context) => Login(
+                      )),
                   );
                 }
               },

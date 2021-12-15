@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:forumapp/models/MensagemBD.dart';
@@ -5,6 +7,7 @@ import 'package:forumapp/models/UsuarioBD.dart';
 import 'cadastrar.dart';
 import 'logar.dart';
 import 'mensagem.dart';
+import 'mensagem_especifica.dart';
 
 class PageForum extends StatefulWidget {
   Usuario a;
@@ -17,7 +20,7 @@ class _PageForumState extends State<PageForum> {
   String _nameController = "";
   String _emailController = "";
   Usuario _editedContact;
-  
+  IconData icon = Icons.cancel_rounded;
   List<Mensagem> lMensagem = List();
   MensagemHelper helper = MensagemHelper();
   @override
@@ -26,12 +29,13 @@ class _PageForumState extends State<PageForum> {
     
     if (widget.a == null) {
       _nameController = "Usuario Não Esta Logado";
-     
+      icon = Icons.cancel_rounded;
     } else {
       _editedContact = Usuario.fromMap(widget.a.toMap());
       _nameController = _editedContact.name;
       _emailController = _editedContact.email;
-      
+      icon = Icons.check;
+     
     }
     _getAllContacts();
   }
@@ -57,7 +61,7 @@ class _PageForumState extends State<PageForum> {
       floatingActionButton:  FloatingActionButton.extended(
         onPressed: () {
            if(_nameController == "Usuario Não Esta Logado"){
-           
+              _showDialog();
            }else {
              Navigator.push(
                     context,
@@ -77,14 +81,17 @@ class _PageForumState extends State<PageForum> {
               UserAccountsDrawerHeader(               
                 accountName: Text( _nameController),
                 accountEmail: Text( _emailController ),
-                currentAccountPicture: CircleAvatar(
-                  radius: 30.0,
-                  backgroundImage: 
-                NetworkImage(
-                  'https://w7.pngwing.com/pngs/406/844/png-transparent-computer-icons-person-user-spark-icon-people-share-icon-user.png'),
-                  backgroundColor: Colors.transparent,
-                ),
-              ),
+                currentAccountPicture: CircleAvatar(                           
+                 
+                  backgroundColor: Colors.blue[900],
+                  child: Icon(                    
+                   icon,
+                   
+                  ),
+                    ),
+                  ),
+                 
+              
               ListTile(
                 leading: Icon(Icons.account_circle_rounded, color: Colors.blue[600]),
                 title: Text("Entrar"),
@@ -108,7 +115,20 @@ class _PageForumState extends State<PageForum> {
                     MaterialPageRoute(builder: (context) => Cadastro()),
                   );
                 }
+               ),
+                ListTile( 
+                 leading: Icon(Icons.logout, color: Colors.blue[600]),
+                 title: Text("Deslogar"),
+                 subtitle: Text("Clicando aqui você vai deslogar do sitema..."),
+                 trailing: Icon(Icons.arrow_forward),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PageForum()),
+                  );
+                }
                )
+               
             ],
            )
         )
@@ -123,6 +143,7 @@ class _PageForumState extends State<PageForum> {
       
     });
   }
+
   Widget _contactCard(BuildContext context, int index) {
     return GestureDetector(
         child: Card(
@@ -142,13 +163,18 @@ class _PageForumState extends State<PageForum> {
                           style: TextStyle(
                               fontSize: 16.0, fontWeight: FontWeight.bold)),
                        ),
-                      Text(lMensagem[index].nome ?? "",
+                      Text("Autor: " + lMensagem[index].nome ?? "",
                           style: TextStyle(fontSize: 14.0)),
                       Padding(
                         padding: EdgeInsets.only(left: 150.0),
                       child:TextButton(                  
                         child: const Text('Ler Toda Mensagem'),
-                        onPressed: () {/* ... */},
+                        onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => Mensagem_especifica(mensagem : lMensagem[index])),
+                            );
+                        },
                         ), 
                         ), 
                     ],
@@ -161,10 +187,39 @@ class _PageForumState extends State<PageForum> {
           ),
         ),
         onTap: () {
-          //_showContactPage(contact: contacts[index]);
-         // _showOptions(context, index);
-        });
+         
+        }
+        );
   }
 
-  
+  void _showDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+      
+        return AlertDialog(
+          title: new Text("Você Não Está Logado no Sistema"),
+          
+          actions: <Widget>[
+         
+            new FlatButton(
+              child: new Text("Entrar"),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Login()),
+                  );
+              },
+            ),
+            new FlatButton(              
+              child: new Text("Fechar"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+    }
 }

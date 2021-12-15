@@ -6,7 +6,6 @@ import 'package:forumapp/views/page_forum.dart';
 
 
 class MensagemAplicacao extends StatefulWidget {
-  //const PageForum({ key, Usuario }) : super(key: key);
   Usuario a;
   MensagemAplicacao({this.a});
   @override
@@ -92,7 +91,7 @@ class _MensagemAplicacaoState extends State<MensagemAplicacao> {
                      
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => PageForum()),
+                    MaterialPageRoute(builder: (context) => PageForum(a:_editedContact)),
                   );
                 }
               },

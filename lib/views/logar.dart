@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:forumapp/models/UsuarioBD.dart';
+import 'package:forumapp/views/cadastrar.dart';
 import 'package:forumapp/views/page_forum.dart';
 
 class Login extends StatefulWidget {
@@ -18,7 +19,7 @@ class _LoginState extends State<Login> {
   double displayWidth() => MediaQuery.of(context).size.width;
 
   UsuarioHelper helper = UsuarioHelper();
-
+  bool a = true;
   
 
   @override
@@ -77,7 +78,7 @@ class _LoginState extends State<Login> {
                 if (_formKey.currentState.validate()) {
                    await helper.returnLogin(email.text, senha.text).then((val) async {
                            if(val == null){
-                             email.text = "Invalido";
+                             _showDialog();
                            }else {   
                              print(val);
                               Navigator.push(
@@ -94,8 +95,39 @@ class _LoginState extends State<Login> {
         ],
       ),
     )
-      ),    
+      ),
+        
     );
   }
   
+void _showDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // retorna um objeto do tipo Dialog
+        return AlertDialog(
+          title: new Text("Email ou senha não corresponde"),
+          content: new Text("Veja se você digitou a senha ou email certo.\n" + "Caso contrário crie uma conta."),
+          actions: <Widget>[
+            // define os botões na base do dialogo
+            new FlatButton(
+              child: new Text("Cadastrar"),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Cadastro()),
+                  );
+              },
+            ),
+            new FlatButton(              
+              child: new Text("Fechar"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+    }
 }
